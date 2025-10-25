@@ -29,8 +29,19 @@ if ! pg_isready &> /dev/null; then
     
     # Try to start PostgreSQL service
     if command -v brew &> /dev/null; then
-        # macOS with Homebrew
-        brew services start postgresql
+        # macOS with Homebrew - try different PostgreSQL versions
+        if brew services list | grep -q "postgresql@14"; then
+            brew services start postgresql@14
+        elif brew services list | grep -q "postgresql@15"; then
+            brew services start postgresql@15
+        elif brew services list | grep -q "postgresql@16"; then
+            brew services start postgresql@16
+        elif brew services list | grep -q "postgresql"; then
+            brew services start postgresql
+        else
+            echo -e "${RED}No PostgreSQL service found. Please install PostgreSQL first.${NC}"
+            exit 1
+        fi
     elif command -v systemctl &> /dev/null; then
         # Linux with systemd
         sudo systemctl start postgresql
@@ -43,10 +54,11 @@ if ! pg_isready &> /dev/null; then
     fi
     
     # Wait a moment for the service to start
-    sleep 3
+    sleep 5
     
     if ! pg_isready &> /dev/null; then
         echo -e "${RED}Failed to start PostgreSQL service. Please start it manually.${NC}"
+        echo -e "${YELLOW}Try running: brew services start postgresql@14${NC}"
         exit 1
     fi
 fi

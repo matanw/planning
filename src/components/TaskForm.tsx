@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Task, TaskStatus } from '../types/task';
+import type { Task, TaskStatus } from '../types/task';
 import { X, Calendar, Tag, FileText } from 'lucide-react';
-import { formatTextForDisplay, analyzeText } from '../utils/hebrew';
+import { analyzeText } from '../utils/hebrew';
 import { format } from 'date-fns';
 
 interface TaskFormProps {

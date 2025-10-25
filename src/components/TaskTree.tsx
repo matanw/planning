@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Task, TaskTreeNode } from '../types/task';
+import type { Task, TaskTreeNode } from '../types/task';
 import { ChevronRight, ChevronDown, Plus, Edit, Trash2, Calendar, Tag } from 'lucide-react';
 import { formatTextForDisplay, getTaskDirection } from '../utils/hebrew';
 import { format } from 'date-fns';
@@ -7,7 +7,6 @@ import { format } from 'date-fns';
 interface TaskTreeProps {
   tasks: TaskTreeNode[];
   onTaskSelect: (task: Task) => void;
-  onTaskUpdate: (id: number, data: Partial<Task>) => void;
   onTaskDelete: (id: number) => void;
   onNewSubtask: (parentId: number) => void;
 }
@@ -15,7 +14,6 @@ interface TaskTreeProps {
 const TaskTree: React.FC<TaskTreeProps> = ({
   tasks,
   onTaskSelect,
-  onTaskUpdate,
   onTaskDelete,
   onNewSubtask
 }) => {

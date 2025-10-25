@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Download, Upload, FileText, FileSpreadsheet, FileCode } from 'lucide-react';
-import DatabaseService from '../services/database';
-import { ExportOptions, ImportResult, Task } from '../types/task';
+import BrowserStorageService from '../services/browserStorage';
+import type { ExportOptions, ImportResult, Task } from '../types/task';
 
 interface ExportImportProps {
-  dbService: DatabaseService | null;
+  dbService: BrowserStorageService | null;
   onTasksUpdated: () => void;
 }
 
@@ -18,7 +18,6 @@ const ExportImport: React.FC<ExportImportProps> = ({ dbService, onTasksUpdated }
     includeLabels: true
   });
   const [isExporting, setIsExporting] = useState(false);
-  const [isImporting, setIsImporting] = useState(false);
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
 
   const exportTasks = async () => {
@@ -71,7 +70,6 @@ const ExportImport: React.FC<ExportImportProps> = ({ dbService, onTasksUpdated }
   const importTasks = async (file: File) => {
     if (!dbService) return;
 
-    setIsImporting(true);
     setImportResult(null);
 
     try {
@@ -139,8 +137,6 @@ const ExportImport: React.FC<ExportImportProps> = ({ dbService, onTasksUpdated }
         importedCount: 0,
         errors: [`Import failed: ${error}`]
       });
-    } finally {
-      setIsImporting(false);
     }
   };
 

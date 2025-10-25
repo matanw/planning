@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Task, TaskTreeNode, TaskFilters, TaskSortOptions } from './types/task';
-import DatabaseService from './services/database';
+import { useState, useEffect } from 'react';
+import type { Task, TaskTreeNode, TaskFilters, TaskSortOptions } from './types/task';
+import BrowserStorageService from './services/browserStorage';
 import TaskTree from './components/TaskTree';
 import TaskForm from './components/TaskForm';
 import TaskFiltersComponent from './components/TaskFilters';
 import ExportImport from './components/ExportImport';
-import { DatabaseConfig } from './types/task';
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -17,18 +16,11 @@ function App() {
     field: 'created_at',
     direction: 'desc'
   });
-  const [dbService, setDbService] = useState<DatabaseService | null>(null);
+  const [dbService, setDbService] = useState<BrowserStorageService | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Database configuration - in a real app, this would come from environment variables
-  const dbConfig: DatabaseConfig = {
-    host: 'localhost',
-    port: 5432,
-    database: 'task_management',
-    user: 'postgres',
-    password: 'password'
-  };
+  // Using browser storage - no database configuration needed
 
   useEffect(() => {
     initializeDatabase();
@@ -43,14 +35,14 @@ function App() {
   const initializeDatabase = async () => {
     try {
       setIsLoading(true);
-      const service = new DatabaseService(dbConfig);
+      const service = new BrowserStorageService();
       await service.connect();
       await service.initializeSchema();
       setDbService(service);
       setError(null);
     } catch (err) {
-      console.error('Database initialization failed:', err);
-      setError('Failed to connect to database. Please ensure PostgreSQL is running.');
+      console.error('Storage initialization failed:', err);
+      setError('Failed to initialize browser storage.');
     } finally {
       setIsLoading(false);
     }
@@ -104,7 +96,7 @@ function App() {
     if (!dbService) return;
 
     try {
-      const newTask = await dbService.createTask(taskData);
+      await dbService.createTask(taskData);
       await loadTasks();
       setIsFormOpen(false);
       setSelectedTask(null);
@@ -145,7 +137,7 @@ function App() {
     setIsFormOpen(true);
   };
 
-  const handleNewTask = (parentId?: number) => {
+  const handleNewTask = () => {
     setSelectedTask(null);
     setIsFormOpen(true);
   };
@@ -219,7 +211,6 @@ function App() {
               <TaskTree
                 tasks={taskTree}
                 onTaskSelect={handleTaskSelect}
-                onTaskUpdate={handleUpdateTask}
                 onTaskDelete={handleDeleteTask}
                 onNewSubtask={handleNewTask}
               />

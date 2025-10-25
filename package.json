@@ -14,6 +14,7 @@
     "db:reset": "dropdb task_management --if-exists && npm run db:create && npm run db:schema"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.1.16",
     "@types/pg": "^8.15.5",
     "autoprefixer": "^10.4.21",
     "date-fns": "^4.1.0",

@@ -1,5 +1,5 @@
 import React from 'react';
-import { TaskFilters, TaskSortOptions, TaskStatus } from '../types/task';
+import type { TaskFilters, TaskSortOptions, TaskStatus } from '../types/task';
 import { Filter, SortAsc, SortDesc } from 'lucide-react';
 
 interface TaskFiltersComponentProps {
