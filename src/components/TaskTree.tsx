@@ -8,7 +8,7 @@ interface TaskTreeProps {
   tasks: TaskTreeNode[];
   onTaskSelect: (task: Task) => void;
   onTaskDelete: (id: number) => void;
-  onNewSubtask: (parentId: number) => void;
+  onNewSubtask: (parentId?: number) => void;
 }
 
 const TaskTree: React.FC<TaskTreeProps> = ({
@@ -29,23 +29,6 @@ const TaskTree: React.FC<TaskTreeProps> = ({
     setExpandedNodes(newExpanded);
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'done':
-        return 'bg-green-100 text-green-800';
-      case 'in_progress':
-        return 'bg-blue-100 text-blue-800';
-      case 'not_started':
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getPriorityColor = (priority: number) => {
-    if (priority >= 4) return 'text-red-600';
-    if (priority >= 2) return 'text-yellow-600';
-    return 'text-gray-600';
-  };
 
   const isOverdue = (deadline?: Date) => {
     if (!deadline) return false;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { Task, TaskStatus } from '../types/task';
-import { X, Calendar, Tag, FileText } from 'lucide-react';
+import { X } from 'lucide-react';
 import { analyzeText } from '../utils/hebrew';
 import { format } from 'date-fns';
 
