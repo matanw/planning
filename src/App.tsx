@@ -144,10 +144,14 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Initializing database...</p>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="text-center animate-fade-in">
+          <div className="relative">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl mx-auto mb-4 animate-pulse shadow-lg"></div>
+            <div className="absolute inset-0 w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl mx-auto blur-lg opacity-30"></div>
+          </div>
+          <h2 className="text-xl font-bold gradient-text mb-2">Personal Task Manager</h2>
+          <p className="text-gray-600">Initializing your workspace...</p>
         </div>
       </div>
     );
@@ -155,37 +159,56 @@ function App() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto p-6">
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            <strong className="font-bold">Error:</strong>
-            <span className="block sm:inline"> {error}</span>
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-orange-50 flex items-center justify-center p-4">
+        <div className="text-center max-w-md mx-auto animate-fade-in">
+          <div className="w-12 h-12 bg-gradient-to-r from-red-500 to-orange-500 rounded-xl mx-auto mb-4 flex items-center justify-center">
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
           </div>
-          <button
-            onClick={initializeDatabase}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Retry Connection
-          </button>
+          <div className="bg-white/80 backdrop-blur-lg border border-red-200 rounded-2xl p-6 shadow-xl">
+            <h3 className="text-xl font-bold text-red-800 mb-2">Oops! Something went wrong</h3>
+            <p className="text-red-600 mb-4">{error}</p>
+            <button
+              onClick={initializeDatabase}
+              className="btn-primary"
+            >
+              Try Again
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm border-b">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      {/* Modern Header */}
+      <header className="glass-effect border-b border-white/20 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <h1 className="text-2xl font-bold text-gray-900">
-              Personal Task Management
-            </h1>
-            <div className="flex space-x-2">
+          <div className="flex justify-between items-center py-6">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-md">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h1 className="text-xl font-bold gradient-text">
+                          Personal Task Manager
+                        </h1>
+                        <p className="text-xs text-gray-600">Organize your goals, one task at a time</p>
+                      </div>
+                    </div>
+            <div className="flex items-center space-x-3">
               <button
                 onClick={() => handleNewTask()}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+                className="btn-primary flex items-center space-x-2"
               >
-                New Task
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                <span>New Task</span>
               </button>
               <ExportImport dbService={dbService} onTasksUpdated={loadTasks} />
             </div>
@@ -193,21 +216,35 @@ function App() {
         </div>
       </header>
 
+      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Filters Sidebar */}
+          {/* Modern Filters Sidebar */}
           <div className="lg:col-span-1">
-            <TaskFiltersComponent
-              filters={filters}
-              onFiltersChange={setFilters}
-              sortOptions={sortOptions}
-              onSortChange={setSortOptions}
-            />
+            <div className="sticky top-24">
+              <TaskFiltersComponent
+                filters={filters}
+                onFiltersChange={setFilters}
+                sortOptions={sortOptions}
+                onSortChange={setSortOptions}
+              />
+            </div>
           </div>
 
-          {/* Main Content */}
+          {/* Main Content Area */}
           <div className="lg:col-span-3">
-            <div className="bg-white rounded-lg shadow">
+            <div className="card card-hover animate-fade-in">
+              <div className="p-6 border-b border-gray-100">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-semibold text-gray-800">Your Tasks</h2>
+                        <div className="flex items-center space-x-2 text-sm text-gray-500">
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                          </svg>
+                          <span>{tasks.length} tasks</span>
+                        </div>
+                </div>
+              </div>
               <TaskTree
                 tasks={taskTree}
                 onTaskSelect={handleTaskSelect}
@@ -219,7 +256,7 @@ function App() {
         </div>
       </div>
 
-      {/* Task Form Modal */}
+      {/* Modern Task Form Modal */}
       {isFormOpen && (
         <TaskForm
           task={selectedTask}

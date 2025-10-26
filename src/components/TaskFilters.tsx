@@ -63,139 +63,175 @@ const TaskFiltersComponent: React.FC<TaskFiltersComponentProps> = ({
   });
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-medium text-gray-900 flex items-center">
-          <Filter className="w-5 h-5 mr-2" />
-          Filters & Sort
-        </h3>
-        {hasActiveFilters && (
-          <button
-            onClick={clearFilters}
-            className="text-sm text-blue-600 hover:text-blue-800"
-          >
-            Clear All
-          </button>
-        )}
-      </div>
-
-      {/* Search */}
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Search Tasks
-        </label>
-        <input
-          type="text"
-          value={filters.searchText || ''}
-          onChange={(e) => handleSearchChange(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Search by title or description..."
-        />
-      </div>
-
-      {/* Status Filter */}
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Status
-        </label>
-        <div className="space-y-2">
-          {(['not_started', 'in_progress', 'done'] as TaskStatus[]).map(status => (
-            <label key={status} className="flex items-center">
-              <input
-                type="checkbox"
-                checked={filters.status?.includes(status) || false}
-                onChange={(e) => handleStatusChange(status, e.target.checked)}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <span className="ml-2 text-sm text-gray-700 capitalize">
-                {status.replace('_', ' ')}
-              </span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      {/* Priority Filter */}
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Priority
-        </label>
-        <div className="space-y-2">
-          {[1, 2, 3, 4, 5].map(priority => (
-            <label key={priority} className="flex items-center">
-              <input
-                type="checkbox"
-                checked={filters.priority?.includes(priority) || false}
-                onChange={(e) => handlePriorityChange(priority, e.target.checked)}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <span className="ml-2 text-sm text-gray-700">
-                {'!'.repeat(priority)} Priority {priority}
-              </span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      {/* Sort Options */}
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Sort By
-        </label>
-        <div className="space-y-2">
-          {[
-            { field: 'title' as const, label: 'Title' },
-            { field: 'status' as const, label: 'Status' },
-            { field: 'deadline' as const, label: 'Deadline' },
-            { field: 'priority' as const, label: 'Priority' },
-            { field: 'created_at' as const, label: 'Created Date' },
-            { field: 'updated_at' as const, label: 'Updated Date' }
-          ].map(({ field, label }) => (
+    <div className="card card-hover animate-fade-in">
+      <div className="p-6 border-b border-gray-100">
+        <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-gray-800 flex items-center">
+                    <div className="w-6 h-6 bg-gradient-to-r from-blue-100 to-purple-100 rounded-md flex items-center justify-center mr-3">
+                      <Filter className="w-3 h-3 text-blue-600" />
+                    </div>
+                    Filters & Sort
+                  </h3>
+          {hasActiveFilters && (
             <button
-              key={field}
-              onClick={() => handleSortFieldChange(field)}
-              className={`w-full flex items-center justify-between p-2 rounded-md text-sm transition-colors ${
-                sortOptions.field === field
-                  ? 'bg-blue-100 text-blue-800'
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
+              onClick={clearFilters}
+              className="text-sm text-blue-600 hover:text-blue-800 font-medium px-3 py-1 rounded-lg hover:bg-blue-50 transition-colors duration-200"
             >
-              <span>{label}</span>
-              {sortOptions.field === field && (
-                sortOptions.direction === 'asc' ? (
-                  <SortAsc className="w-4 h-4" />
-                ) : (
-                  <SortDesc className="w-4 h-4" />
-                )
-              )}
+              Clear All
             </button>
-          ))}
+          )}
         </div>
       </div>
+      <div className="p-6 space-y-6">
 
-      {/* Active Filters Summary */}
-      {hasActiveFilters && (
-        <div className="pt-4 border-t">
-          <h4 className="text-sm font-medium text-gray-700 mb-2">Active Filters:</h4>
-          <div className="space-y-1">
-            {filters.status && filters.status.length > 0 && (
-              <div className="text-xs text-gray-600">
-                Status: {filters.status.map(s => s.replace('_', ' ')).join(', ')}
-              </div>
-            )}
-            {filters.priority && filters.priority.length > 0 && (
-              <div className="text-xs text-gray-600">
-                Priority: {filters.priority.join(', ')}
-              </div>
-            )}
-            {filters.searchText && (
-              <div className="text-xs text-gray-600">
-                Search: "{filters.searchText}"
-              </div>
-            )}
+        {/* Search */}
+        <div className="form-group">
+                  <label className="form-label">
+                    Search Tasks
+                  </label>
+          <input
+            type="text"
+            value={filters.searchText || ''}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            className="form-input"
+            placeholder="Search by title or description..."
+          />
+        </div>
+
+        {/* Status Filter */}
+        <div className="form-group">
+                  <label className="form-label">
+                    Status
+                  </label>
+          <div className="space-y-3">
+            {(['not_started', 'in_progress', 'done'] as TaskStatus[]).map(status => (
+              <label key={status} className="flex items-center p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={filters.status?.includes(status) || false}
+                  onChange={(e) => handleStatusChange(status, e.target.checked)}
+                  className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 focus:ring-2"
+                />
+                <span className={`ml-3 text-sm font-medium capitalize ${
+                  status === 'done' ? 'text-green-700' :
+                  status === 'in_progress' ? 'text-blue-700' :
+                  'text-gray-700'
+                }`}>
+                  {status.replace('_', ' ')}
+                </span>
+              </label>
+            ))}
           </div>
         </div>
-      )}
+
+        {/* Priority Filter */}
+        <div className="form-group">
+                  <label className="form-label">
+                    Priority
+                  </label>
+          <div className="space-y-3">
+            {[1, 2, 3, 4, 5].map(priority => (
+              <label key={priority} className="flex items-center p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={filters.priority?.includes(priority) || false}
+                  onChange={(e) => handlePriorityChange(priority, e.target.checked)}
+                  className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 focus:ring-2"
+                />
+                <div className={`ml-3 priority-indicator priority-${priority}`}>
+                  {priority}
+                </div>
+                <span className="ml-3 text-sm font-medium text-gray-700">
+                  Priority {priority}
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Sort Options */}
+        <div className="form-group">
+                  <label className="form-label">
+                    Sort By
+                  </label>
+          <div className="space-y-2">
+            {[
+              { field: 'title' as const, label: 'Title', icon: '📝' },
+              { field: 'status' as const, label: 'Status', icon: '📊' },
+              { field: 'deadline' as const, label: 'Deadline', icon: '📅' },
+              { field: 'priority' as const, label: 'Priority', icon: '⭐' },
+              { field: 'created_at' as const, label: 'Created Date', icon: '🕒' },
+              { field: 'updated_at' as const, label: 'Updated Date', icon: '🔄' }
+            ].map(({ field, label, icon }) => (
+              <button
+                key={field}
+                onClick={() => handleSortFieldChange(field)}
+                className={`w-full flex items-center justify-between p-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                  sortOptions.field === field
+                    ? 'bg-gradient-to-r from-blue-100 to-purple-100 text-blue-800 shadow-md'
+                    : 'text-gray-700 hover:bg-gray-50 hover:shadow-sm'
+                }`}
+              >
+                <div className="flex items-center">
+                  <span className="mr-3">{icon}</span>
+                  <span>{label}</span>
+                </div>
+                {sortOptions.field === field && (
+                  sortOptions.direction === 'asc' ? (
+                    <SortAsc className="w-4 h-4 text-blue-600" />
+                  ) : (
+                    <SortDesc className="w-4 h-4 text-blue-600" />
+                  )
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Active Filters Summary */}
+        {hasActiveFilters && (
+          <div className="pt-6 border-t border-gray-200">
+                    <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                      <svg className="w-2 h-2 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                      </svg>
+                      Active Filters
+                    </h4>
+            <div className="space-y-2">
+              {filters.status && filters.status.length > 0 && (
+                <div className="flex items-center">
+                  <span className="text-xs text-gray-500 mr-2">Status:</span>
+                  <div className="flex space-x-1">
+                    {filters.status.map(s => (
+                      <span key={s} className="badge badge-info">
+                        {s.replace('_', ' ')}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {filters.priority && filters.priority.length > 0 && (
+                <div className="flex items-center">
+                  <span className="text-xs text-gray-500 mr-2">Priority:</span>
+                  <div className="flex space-x-1">
+                    {filters.priority.map(p => (
+                      <span key={p} className={`priority-indicator priority-${p}`}>
+                        {p}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {filters.searchText && (
+                <div className="flex items-center">
+                  <span className="text-xs text-gray-500 mr-2">Search:</span>
+                  <span className="badge badge-gray">"{filters.searchText}"</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

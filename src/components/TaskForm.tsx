@@ -103,31 +103,43 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onClose, allTasks }) 
   const descriptionAnalysis = formData.description ? analyzeText(formData.description) : null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-900">
-            {task ? 'Edit Task' : 'Create New Task'}
-          </h2>
+    <div className="modal-overlay animate-fade-in">
+      <div className="modal-content">
+        <div className="flex items-center justify-between p-8 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-purple-50">
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mr-3">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-800">
+                      {task ? 'Edit Task' : 'Create New Task'}
+                    </h2>
+                    <p className="text-xs text-gray-600">
+                      {task ? 'Update your task details' : 'Add a new task to your list'}
+                    </p>
+                  </div>
+                </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="w-10 h-10 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl flex items-center justify-center transition-colors duration-200"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="p-8 space-y-8">
           {/* Title */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Title *
-            </label>
+          <div className="form-group">
+                    <label className="form-label">
+                      Title *
+                    </label>
             <input
               type="text"
               value={formData.title}
               onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-              className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              className={`form-input ${
                 titleAnalysis.direction === 'rtl' ? 'text-right' : 'text-left'
               }`}
               style={{ direction: titleAnalysis.direction }}
@@ -137,16 +149,15 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onClose, allTasks }) 
           </div>
 
           {/* Description */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <FileText className="w-4 h-4 inline mr-1" />
-              Description
-            </label>
+          <div className="form-group">
+                    <label className="form-label">
+                      Description
+                    </label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
               rows={4}
-              className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none ${
+              className={`form-textarea ${
                 descriptionAnalysis?.direction === 'rtl' ? 'text-right' : 'text-left'
               }`}
               style={{ direction: descriptionAnalysis?.direction || 'ltr' }}
@@ -155,15 +166,15 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onClose, allTasks }) 
           </div>
 
           {/* Status and Priority */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Status
-              </label>
+          <div className="grid grid-cols-2 gap-6">
+            <div className="form-group">
+                      <label className="form-label">
+                        Status
+                      </label>
               <select
                 value={formData.status}
                 onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value as TaskStatus }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="form-select"
               >
                 <option value="not_started">Not Started</option>
                 <option value="in_progress">In Progress</option>
@@ -171,14 +182,14 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onClose, allTasks }) 
               </select>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Priority (0-5)
-              </label>
+            <div className="form-group">
+                      <label className="form-label">
+                        Priority
+                      </label>
               <select
                 value={formData.priority}
                 onChange={(e) => setFormData(prev => ({ ...prev, priority: parseInt(e.target.value) }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="form-select"
               >
                 <option value={0}>None</option>
                 <option value={1}>Low</option>
@@ -191,31 +202,30 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onClose, allTasks }) 
           </div>
 
           {/* Deadline */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Calendar className="w-4 h-4 inline mr-1" />
-              Deadline
-            </label>
+          <div className="form-group">
+                    <label className="form-label">
+                      Deadline
+                    </label>
             <input
               type="date"
               value={formData.deadline}
               onChange={(e) => setFormData(prev => ({ ...prev, deadline: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="form-input"
             />
           </div>
 
           {/* Parent Task */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Parent Task
-            </label>
+          <div className="form-group">
+                    <label className="form-label">
+                      Parent Task
+                    </label>
             <select
               value={formData.parent_id || ''}
               onChange={(e) => setFormData(prev => ({ 
                 ...prev, 
                 parent_id: e.target.value ? parseInt(e.target.value) : undefined 
               }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="form-select"
             >
               <option value="">No parent (root task)</option>
               {getAvailableParents().map(parent => (
@@ -227,41 +237,40 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onClose, allTasks }) 
           </div>
 
           {/* Labels */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Tag className="w-4 h-4 inline mr-1" />
-              Labels
-            </label>
-            <div className="flex flex-wrap gap-2 mb-2">
+          <div className="form-group">
+                    <label className="form-label">
+                      Labels
+                    </label>
+            <div className="flex flex-wrap gap-2 mb-3">
               {formData.labels.map((label, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                  className="badge badge-info"
                 >
                   {label}
                   <button
                     type="button"
                     onClick={() => handleRemoveLabel(label)}
-                    className="ml-1 text-blue-600 hover:text-blue-800"
+                    className="ml-2 text-blue-600 hover:text-blue-800"
                   >
                     <X className="w-3 h-3" />
                   </button>
                 </span>
               ))}
             </div>
-            <div className="flex space-x-2">
+            <div className="flex space-x-3">
               <input
                 type="text"
                 value={newLabel}
                 onChange={(e) => setNewLabel(e.target.value)}
                 onKeyPress={handleKeyPress}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="form-input flex-1"
                 placeholder="Add a label..."
               />
               <button
                 type="button"
                 onClick={handleAddLabel}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="btn-primary"
               >
                 Add
               </button>
@@ -269,18 +278,18 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onClose, allTasks }) 
           </div>
 
           {/* Form Actions */}
-          <div className="flex justify-end space-x-3 pt-6 border-t">
+          <div className="flex justify-end space-x-4 pt-8 border-t border-gray-200">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="btn-secondary"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting || !formData.title.trim()}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? 'Saving...' : (task ? 'Update Task' : 'Create Task')}
             </button>
