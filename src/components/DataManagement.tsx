@@ -12,6 +12,12 @@ const DataManagement: React.FC<DataManagementProps> = ({ onClearAllData }) => {
   const [supabaseUrl, setSupabaseUrl] = useState('');
   const [supabaseKey, setSupabaseKey] = useState('');
 
+  // Load existing credentials
+  React.useEffect(() => {
+    setSupabaseUrl(localStorage.getItem('supabase_config_url') || '');
+    setSupabaseKey(localStorage.getItem('supabase_config_key') || '');
+  }, []);
+
   const handleClearData = () => {
     if (window.confirm('⚠️ This will delete ALL tasks from localStorage. This cannot be undone. Are you absolutely sure?')) {
       onClearAllData();
@@ -23,7 +29,7 @@ const DataManagement: React.FC<DataManagementProps> = ({ onClearAllData }) => {
     localStorage.setItem('supabase_config_url', supabaseUrl);
     localStorage.setItem('supabase_config_key', supabaseKey);
     setShowSupabaseConfig(false);
-    alert('Supabase credentials saved! Please refresh the page.');
+    alert('✅ Supabase credentials saved!\n\nPlease refresh the page to switch to cloud storage.');
   };
 
   return (
