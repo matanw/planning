@@ -32,7 +32,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onClose, allTasks }) 
           ...prev,
           parent_id: task.parent_id
         }));
-      } else {
+      } else if (task.title) {
         // Existing task with full properties
         setFormData({
           title: task.title,
@@ -44,6 +44,17 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onClose, allTasks }) 
           priority: task.priority || 0
         });
       }
+    } else {
+      // Reset form for new task
+      setFormData({
+        title: '',
+        description: '',
+        status: 'not_started' as TaskStatus,
+        deadline: '',
+        parent_id: undefined,
+        labels: [],
+        priority: 0
+      });
     }
   }, [task]);
 
