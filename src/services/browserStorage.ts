@@ -38,6 +38,7 @@ class BrowserStorageService {
   }
 
   async createTask(taskData: CreateTaskData): Promise<Task> {
+    console.log('browserStorage.createTask called with:', taskData);
     const tasks = this.getTasks();
     const newTask: Task = {
       id: Date.now(), // Simple ID generation
@@ -52,8 +53,10 @@ class BrowserStorageService {
       priority: taskData.priority || 0
     };
 
+    console.log('Created new task:', newTask);
     tasks.push(newTask);
     this.saveTasks(tasks);
+    console.log('Saved tasks, total count:', tasks.length);
     return newTask;
   }
 

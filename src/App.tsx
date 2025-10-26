@@ -101,11 +101,17 @@ function App() {
   };
 
   const handleCreateTask = async (taskData: Omit<Task, 'id' | 'created_at' | 'updated_at'>) => {
-    if (!dbService) return;
+    if (!dbService) {
+      console.error('No database service available');
+      return;
+    }
 
+    console.log('Creating task with data:', taskData);
     try {
       await dbService.createTask(taskData);
+      console.log('Task created successfully');
       await loadTasks();
+      console.log('Tasks reloaded');
       setIsFormOpen(false);
       setSelectedTask(null);
     } catch (err) {
