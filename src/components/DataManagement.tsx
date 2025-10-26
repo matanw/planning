@@ -49,7 +49,7 @@ const DataManagement: React.FC<DataManagementProps> = ({ onClearAllData }) => {
         title="Clear all data from localStorage"
       >
         <Trash2 className="w-4 h-4 mr-1" />
-        Clear Data
+        Clear localStorage
       </button>
 
       {/* Clear Data Confirmation */}

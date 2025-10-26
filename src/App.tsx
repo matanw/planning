@@ -153,8 +153,8 @@ function App() {
   const handleClearAllData = () => {
     // Clear all tasks from localStorage
     localStorage.removeItem('task_management_tasks');
-    // Reload tasks (will show empty state)
-    loadTasks();
+    // Force refresh to reset app state
+    window.location.reload();
   };
 
   const handleConfigureSupabase = () => {
