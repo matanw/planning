@@ -311,7 +311,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onClose, allTasks }) 
               disabled={isSubmitting || !formData.title.trim()}
               className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? 'Saving...' : (task ? 'Update Task' : 'Create Task')}
+              {isSubmitting ? 'Saving...' : (task && task.title ? 'Update Task' : 'Create Task')}
             </button>
           </div>
         </form>

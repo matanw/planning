@@ -302,8 +302,8 @@ function App() {
       {isFormOpen && (
         <TaskForm
           task={selectedTask}
-          onSave={selectedTask ? 
-            (data) => handleUpdateTask(selectedTask.id, data) : 
+          onSave={selectedTask && selectedTask.id && selectedTask.title ? 
+            (data) => handleUpdateTask(selectedTask.id!, data) : 
             handleCreateTask
           }
           onClose={() => {
