@@ -26,15 +26,24 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onClose, allTasks }) 
 
   useEffect(() => {
     if (task) {
-      setFormData({
-        title: task.title,
-        description: task.description || '',
-        status: task.status,
-        deadline: task.deadline ? format(task.deadline, 'yyyy-MM-dd') : '',
-        parent_id: task.parent_id,
-        labels: task.labels || [],
-        priority: task.priority || 0
-      });
+      // If task has a parent_id but no other properties, it's a new subtask
+      if (task.parent_id !== undefined && !task.title) {
+        setFormData(prev => ({
+          ...prev,
+          parent_id: task.parent_id
+        }));
+      } else {
+        // Existing task with full properties
+        setFormData({
+          title: task.title,
+          description: task.description || '',
+          status: task.status,
+          deadline: task.deadline ? format(task.deadline, 'yyyy-MM-dd') : '',
+          parent_id: task.parent_id,
+          labels: task.labels || [],
+          priority: task.priority || 0
+        });
+      }
     }
   }, [task]);
 

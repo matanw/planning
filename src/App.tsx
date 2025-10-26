@@ -145,8 +145,14 @@ function App() {
     setIsFormOpen(true);
   };
 
-  const handleNewTask = () => {
-    setSelectedTask(null);
+  const handleNewTask = (parentId?: number) => {
+    // If parentId is provided, set it as the selected task's parent_id
+    if (parentId) {
+      // Create a mock task object just to store the parent_id
+      setSelectedTask({ parent_id: parentId } as Task);
+    } else {
+      setSelectedTask(null);
+    }
     setIsFormOpen(true);
   };
 
