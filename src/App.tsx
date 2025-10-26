@@ -20,8 +20,15 @@ function App() {
   const [dbService, setDbService] = useState<IStorageService | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showSupabasePrompt, setShowSupabasePrompt] = useState(false);
 
-  // Using browser storage - no database configuration needed
+  // Check if Supabase credentials exist in localStorage on mount
+  useEffect(() => {
+    const hasCredentials = localStorage.getItem('supabase_config_url') && localStorage.getItem('supabase_config_key');
+    if (hasCredentials && !import.meta.env.VITE_STORAGE_TYPE) {
+      setShowSupabasePrompt(true);
+    }
+  }, []);
 
   useEffect(() => {
     initializeDatabase();
@@ -153,6 +160,18 @@ function App() {
   const handleConfigureSupabase = () => {
     // This triggers the DataManagement component to open modal
     // The actual saving happens in the DataManagement component
+  };
+
+  const handleUseSupabase = () => {
+    localStorage.setItem('use_supabase', 'true');
+    setShowSupabasePrompt(false);
+    initializeDatabase();
+  };
+
+  const handleUseLocalStorage = () => {
+    localStorage.setItem('use_supabase', 'false');
+    setShowSupabasePrompt(false);
+    initializeDatabase();
   };
 
   if (isLoading) {
@@ -287,6 +306,52 @@ function App() {
           }}
           allTasks={tasks}
         />
+      )}
+
+      {/* Supabase Storage Prompt */}
+      {showSupabasePrompt && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div className="p-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Storage Selection</h3>
+              <p className="text-gray-600 mb-4">
+                We found Supabase credentials in your settings. Would you like to use Supabase for cloud storage?
+              </p>
+              <div className="space-y-3">
+                <div className="p-4 border-2 border-blue-500 rounded-lg bg-blue-50">
+                  <h4 className="font-semibold text-blue-800 mb-1">☁️ Supabase (Recommended)</h4>
+                  <p className="text-sm text-blue-700">
+                    • Sync across devices<br/>
+                    • Automatic backups<br/>
+                    • Cloud storage
+                  </p>
+                </div>
+                <div className="p-4 border border-gray-300 rounded-lg">
+                  <h4 className="font-semibold text-gray-800 mb-1">💾 Local Storage</h4>
+                  <p className="text-sm text-gray-700">
+                    • Works offline<br/>
+                    • Data stays in your browser<br/>
+                    • No setup required
+                  </p>
+                </div>
+              </div>
+              <div className="flex space-x-3 mt-6">
+                <button
+                  onClick={handleUseSupabase}
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                >
+                  Use Supabase
+                </button>
+                <button
+                  onClick={handleUseLocalStorage}
+                  className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+                >
+                  Use Local Storage
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
