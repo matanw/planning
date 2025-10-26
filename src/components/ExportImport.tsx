@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Download, Upload, FileText, FileSpreadsheet, FileCode } from 'lucide-react';
-import BrowserStorageService from '../services/browserStorage';
+import type { IStorageService } from '../services/storageService';
 import type { ExportOptions, ImportResult, Task } from '../types/task';
 
 interface ExportImportProps {
-  dbService: BrowserStorageService | null;
+  dbService: IStorageService | null;
   onTasksUpdated: () => void;
 }
 

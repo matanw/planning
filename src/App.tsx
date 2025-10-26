@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { Task, TaskTreeNode, TaskFilters, TaskSortOptions } from './types/task';
-import BrowserStorageService from './services/browserStorage';
+import { createStorageService, type IStorageService } from './services/storageService';
 import TaskTree from './components/TaskTree';
 import TaskForm from './components/TaskForm';
 import TaskFiltersComponent from './components/TaskFilters';
@@ -16,7 +16,7 @@ function App() {
     field: 'created_at',
     direction: 'desc'
   });
-  const [dbService, setDbService] = useState<BrowserStorageService | null>(null);
+  const [dbService, setDbService] = useState<IStorageService | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -35,14 +35,14 @@ function App() {
   const initializeDatabase = async () => {
     try {
       setIsLoading(true);
-      const service = new BrowserStorageService();
+      const service = createStorageService();
       await service.connect();
       await service.initializeSchema();
       setDbService(service);
       setError(null);
     } catch (err) {
       console.error('Storage initialization failed:', err);
-      setError('Failed to initialize browser storage.');
+      setError('Failed to initialize storage.');
     } finally {
       setIsLoading(false);
     }
