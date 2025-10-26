@@ -21,33 +21,22 @@ export interface IStorageService {
 
 // Create and return the appropriate storage service
 export function createStorageService(): IStorageService {
-  // Check user preference from localStorage
-  const userPrefersSupabase = localStorage.getItem('use_supabase') === 'true';
-  
   // Check for Supabase credentials in localStorage first
   const localStorageUrl = localStorage.getItem('supabase_config_url');
   const localStorageKey = localStorage.getItem('supabase_config_key');
   
   // Then check environment variables
-  const storageType = import.meta.env.VITE_STORAGE_TYPE;
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || localStorageUrl;
   const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || localStorageKey;
 
-  // Use Supabase if:
-  // 1. User explicitly chose Supabase, OR
-  // 2. Environment variable is set to supabase
-  // AND credentials are available
-  const shouldUseSupabase = (userPrefersSupabase || storageType === 'supabase') && 
-                             storageType !== 'local' &&  // Don't force if explicitly set to local
-                             supabaseUrl && supabaseKey;
-
-  if (shouldUseSupabase) {
+  // If credentials are available, MUST use Supabase (required)
+  if (supabaseUrl && supabaseKey) {
     console.log('Using Supabase storage');
     return new SupabaseStorageService(supabaseUrl, supabaseKey);
   }
 
-  // Fall back to localStorage
-  console.log('Using browser localStorage');
+  // No credentials - return localStorage temporarily until user sets up
+  console.log('No database credentials found - using localStorage temporarily');
   return new BrowserStorageService();
 }
 
