@@ -19,13 +19,26 @@ interface SupabaseTask {
 
 class SupabaseStorageService {
   private supabase: SupabaseClient | null = null;
+  private supabaseUrl: string | null = null;
+  private supabaseKey: string | null = null;
+
+  constructor(url?: string, anonKey?: string) {
+    this.supabaseUrl = url || null;
+    this.supabaseKey = anonKey || null;
+  }
 
   async connect(): Promise<void> {
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+    // Try to get credentials from localStorage if not provided in constructor
+    const supabaseUrl = this.supabaseUrl || 
+      import.meta.env.VITE_SUPABASE_URL || 
+      localStorage.getItem('supabase_config_url');
+    
+    const supabaseAnonKey = this.supabaseKey || 
+      import.meta.env.VITE_SUPABASE_ANON_KEY || 
+      localStorage.getItem('supabase_config_key');
 
     if (!supabaseUrl || !supabaseAnonKey) {
-      throw new Error('Missing Supabase environment variables. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
+      throw new Error('Missing Supabase credentials. Please configure them in Settings.');
     }
 
     this.supabase = createClient(supabaseUrl, supabaseAnonKey);

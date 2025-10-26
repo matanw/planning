@@ -5,6 +5,7 @@ import TaskTree from './components/TaskTree';
 import TaskForm from './components/TaskForm';
 import TaskFiltersComponent from './components/TaskFilters';
 import ExportImport from './components/ExportImport';
+import DataManagement from './components/DataManagement';
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -142,6 +143,18 @@ function App() {
     setIsFormOpen(true);
   };
 
+  const handleClearAllData = () => {
+    // Clear all tasks from localStorage
+    localStorage.removeItem('task_management_tasks');
+    // Reload tasks (will show empty state)
+    loadTasks();
+  };
+
+  const handleConfigureSupabase = () => {
+    // This triggers the DataManagement component to open modal
+    // The actual saving happens in the DataManagement component
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
@@ -211,6 +224,10 @@ function App() {
                 <span>New Task</span>
               </button>
               <ExportImport dbService={dbService} onTasksUpdated={loadTasks} />
+              <DataManagement
+                onClearAllData={handleClearAllData}
+                onConfigureSupabase={handleConfigureSupabase}
+              />
             </div>
           </div>
         </div>

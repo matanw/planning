@@ -21,14 +21,19 @@ export interface IStorageService {
 
 // Create and return the appropriate storage service
 export function createStorageService(): IStorageService {
+  // Check for Supabase credentials in localStorage first
+  const localStorageUrl = localStorage.getItem('supabase_config_url');
+  const localStorageKey = localStorage.getItem('supabase_config_key');
+  
+  // Then check environment variables
   const storageType = import.meta.env.VITE_STORAGE_TYPE || 'local';
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || localStorageUrl;
+  const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || localStorageKey;
 
-  // Use Supabase if configured and storage type is supabase
+  // Use Supabase if configured (either via env or localStorage)
   if (storageType === 'supabase' && supabaseUrl && supabaseKey) {
     console.log('Using Supabase storage');
-    return new SupabaseStorageService();
+    return new SupabaseStorageService(supabaseUrl, supabaseKey);
   }
 
   // Fall back to localStorage
